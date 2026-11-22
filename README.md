@@ -79,6 +79,18 @@ createdb -O tasks_user tasks_test
 Then copy the env file as in step 1 and set `DB_PORT=5432` in `backend/.env`.
 The password must match `POSTGRES_PASSWORD` in that file. The remaining steps are the same.
 
+## Running tests
+
+The tests run against the separate `tasks_test` database, so the database from step 1 must be running.
+They never touch the `tasks` database you use while developing.
+
+From `backend/` with the virtual environment active:
+
+```bash
+pip install -r requirements-dev.txt
+pytest -v
+```
+
 ## API reference
 
 Base URL: `http://localhost:8000`. All bodies are JSON. Full schema: http://localhost:8000/docs.
