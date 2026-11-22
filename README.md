@@ -1,23 +1,32 @@
+<div align="center">
+
 # Simple Task Tracker
 
 A small task board for one product squad, built with FastAPI, PostgreSQL and React for a technical test.
 
-![The board on a desktop screen: three columns, Todo, In Progress and Done](docs/screenshot-desktop.png)
+![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![FastAPI 0.165](https://img.shields.io/badge/FastAPI-0.165-009688?logo=fastapi&logoColor=white)
+![PostgreSQL 18](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)
+![React 19](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
+![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![pytest: 17 tests](https://img.shields.io/badge/pytest-17_tests-0A9EDC?logo=pytest&logoColor=white)
 
-<img src="docs/screenshot-mobile.png" alt="The board on a phone: the columns stack vertically" width="320">
+[Quick start](#quick-start) · [API](#api-reference) · [Design decisions](#design-decisions--trade-offs) · [If this grew](#if-this-grew) · [Known limitations](#known-limitations)
+
+<img src="docs/screenshot-desktop.png" alt="The board on a desktop screen: three columns, Todo, In Progress and Done" width="72%">&nbsp;&nbsp;<img src="docs/screenshot-mobile.png" alt="The board on a phone: the columns stack vertically" width="22%">
+
+</div>
 
 ## Features
 
 - Create, list, edit and delete tasks, each with a title, an optional description and a status
-- A board with three columns: Todo, In Progress and Done. The status is changed from a pill on each card
+- A three-column board (Todo, In Progress, Done); the status is changed from a pill on each card
 - Add, edit and delete-confirmation in native `<dialog>` windows (Esc closes, focus stays inside)
-- `GET /tasks?status=` filter in the API (the board itself loads every task and groups them by column)
-- The same validation rules on both sides: the form checks what the API checks, and API errors appear next to the field
+- The same validation on both sides: the form checks what the API checks, and API errors appear next to the field
 - Loading, empty, "can't reach the server" and "database unavailable" states, with a Try again button
-- Notifications stack in the top right: successes fade after 3 seconds, errors stay until dismissed
-- Responsive: three columns from 768px, stacked on phones, no horizontal scroll at 375px
-- Basic accessibility: real labels, visible focus, keyboard-only use, status shown in words and not only by colour
-- 17 API test cases (pytest) against a real PostgreSQL test database
+- Stacked notifications in the top right: successes fade after 3 seconds, errors stay until dismissed
+- Responsive (three columns from 768px, stacked on phones) and keyboard-friendly, with visible focus
+- `GET /tasks?status=` filter in the API (the board itself loads every task and groups them by column)
 
 ## Tech stack & why
 
@@ -35,52 +44,44 @@ A small task board for one product squad, built with FastAPI, PostgreSQL and Rea
 
 ## Prerequisites
 
-- Python 3.11+ (developed on 3.15, which the pinned packages install cleanly on)
-- Node.js 22.12+ (24 LTS recommended)
-- Docker Desktop, or a local PostgreSQL server
-- Git
+Python 3.11+ (developed on 3.15) · Node.js 22.12+ (24 LTS recommended) · Docker Desktop, or a local PostgreSQL server · Git
 
 ## Quick start
 
-Run every command from the repository root unless a step says otherwise.
+Run every command from the repository root unless a step says otherwise. Windows (PowerShell) commands are in the collapsed blocks.
 
-### 0. Get the code
+**0. Get the code**
 
 ```bash
 git clone https://github.com/codezeros18/simple-task-tracker.git simple-task-tracker
 cd simple-task-tracker
 ```
 
-### 1. Start the database
-
-macOS / Linux:
+**1. Start the database**
 
 ```bash
 cp backend/.env.example backend/.env
 docker compose up -d --wait        # starts PostgreSQL 18 and waits until it is healthy
 ```
 
-Windows (PowerShell):
+<details>
+<summary>Windows (PowerShell)</summary>
 
 ```powershell
 Copy-Item backend\.env.example backend\.env
 docker compose up -d --wait
 ```
 
-PostgreSQL listens on port **5433** on your machine (5432 inside the container), so it does not clash with a PostgreSQL you may already have on 5432.
-On first start it also creates the `tasks_test` database used by the test suite.
+</details>
 
-Check that both databases exist:
+PostgreSQL listens on port **5433** on your machine (5432 inside the container), so it does not clash with a PostgreSQL you may already have on 5432.
+On first start it also creates the `tasks_test` database used by the test suite. To check that both databases exist:
 
 ```bash
 docker compose exec db psql -U tasks_user -d tasks -c '\l'
 ```
 
-The list should contain `tasks` and `tasks_test`.
-
-### 2. Start the API
-
-macOS / Linux:
+**2. Start the API**
 
 ```bash
 cd backend
@@ -90,7 +91,8 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Windows (PowerShell):
+<details>
+<summary>Windows (PowerShell)</summary>
 
 ```powershell
 cd backend
@@ -100,15 +102,12 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-The API runs on http://localhost:8000 and the interactive docs are at http://localhost:8000/docs.
-The `tasks` table is created automatically on startup, so the database must be running first.
-`uvicorn` keeps running in this terminal; leave it open and use a new terminal for the next steps.
+</details>
 
-### 3. Start the frontend
+The API runs on http://localhost:8000 (interactive docs at http://localhost:8000/docs). The `tasks` table is created on startup, so the database must be running first.
+`uvicorn` keeps running in this terminal; leave it open and use a new terminal for the next step.
 
-In a new terminal, from the repository root.
-
-macOS / Linux:
+**3. Start the frontend** (in a new terminal, from the repository root)
 
 ```bash
 cp frontend/.env.example frontend/.env
@@ -117,7 +116,8 @@ npm install
 npm run dev
 ```
 
-Windows (PowerShell):
+<details>
+<summary>Windows (PowerShell)</summary>
 
 ```powershell
 Copy-Item frontend\.env.example frontend\.env
@@ -126,9 +126,12 @@ npm install
 npm run dev
 ```
 
+</details>
+
 Open http://localhost:5173. The app talks to the API at `VITE_API_URL` from `frontend/.env`.
 
-## Setup without Docker
+<details>
+<summary><b>Setup without Docker</b></summary>
 
 You need a local PostgreSQL server on port 5432. Create the user and both databases as a superuser
 (on Linux, prefix each command with `sudo -u postgres`):
@@ -142,11 +145,11 @@ createdb -O tasks_user tasks_test
 Then copy the env file as in step 1 and set `DB_PORT=5432` in `backend/.env`.
 The password must match `POSTGRES_PASSWORD` in that file. The remaining steps are the same.
 
+</details>
+
 ## Running tests
 
-The tests run against the separate `tasks_test` database, so the database from step 1 must be running.
-They never touch the `tasks` database you use while developing.
-
+The tests run against the separate `tasks_test` database (never the `tasks` database you develop with), so the database from step 1 must be running.
 In a new terminal, from the repository root (on Windows, activate with `.venv\Scripts\Activate.ps1` instead):
 
 ```bash
@@ -174,6 +177,9 @@ Base URL: `http://localhost:8000`. All bodies are JSON. Full schema: http://loca
 
 ## Project structure
 
+<details>
+<summary>Show the folder tree</summary>
+
 ```text
 .
 ├── docker-compose.yml          # PostgreSQL 18 on host port 5433
@@ -196,14 +202,18 @@ Base URL: `http://localhost:8000`. All bodies are JSON. Full schema: http://loca
         └── components/         # TaskForm, TaskColumn, TaskCard, Notice
 ```
 
+</details>
+
 ## Design decisions & trade-offs
 
-**Two bugs found while prototyping, before writing the real code**
+### Two bugs found while prototyping, before writing the real code
 
 1. **`PUT {"title": null}` passed validation and crashed in the database.** In the update schema every field is optional (`str | None = None`), so an explicit `null` is valid input. The router then wrote `None` into a `NOT NULL` column and the API answered 500. Fix: a `reject_null` validator on `TaskUpdate`. Pydantic does not validate defaults, so it only runs for fields the client actually sent: leaving a field out is fine, sending `null` is a 422.
 2. **A 500 reaches the browser without CORS headers.** Starlette's `ServerErrorMiddleware` sits outside `CORSMiddleware`, so the response for an unhandled exception has no `Access-Control-Allow-Origin`. The browser then hides the real status and only reports a CORS or network error. Fix: an exception handler for `sqlalchemy.exc.OperationalError` (the database cannot be reached) returns 503 `{"detail": "Database unavailable"}`. Handlers run inside the CORS middleware, so the frontend can read it and show the right message. It is deliberately the only handler: any other database error is a bug and should stay a visible 500.
 
-**Proof that the tests guard these rules.** Each rule was removed on purpose, the test suite was run, and the rule was restored (all 17 green again):
+### Proof that the tests guard these rules
+
+Each rule was removed on purpose, the test suite was run, and the rule was restored (all 17 green again):
 
 | Rule removed | Test that failed | Failure |
 |---|---|---|
@@ -212,7 +222,7 @@ Base URL: `http://localhost:8000`. All bodies are JSON. Full schema: http://loca
 | `extra="forbid"` on `TaskCreate` (`schemas.py`) | `test_create_rejects_unknown_field` | `assert 201 == 422` |
 | `strip_whitespace=True` on `Title` (`schemas.py`) | `test_create_strips_title_whitespace`, `test_create_rejects_blank_title[   ]` | `assert '  Buy milk  ' == 'Buy milk'`, `assert 201 == 422` |
 
-**Other decisions**
+### Other decisions
 
 - **`PUT` updates only the fields that are sent** (`model_dump(exclude_unset=True)`), because the brief asks for a `PUT` that changes the title, description *or* status. `{}` is a valid no-op (200). In a project of my own, a partial update would be `PATCH`.
 - **Status is `VARCHAR(20)` plus a `CHECK` constraint, not a native PostgreSQL `ENUM`.** Both the API (`TaskStatus` enum) and the database reject unknown values, and the constraint is built from the same enum so they cannot drift. Adding a status later is a constraint change, which is simpler than altering an `ENUM` type. Values are case-sensitive and written exactly as in the brief: `Todo`, `In Progress`, `Done`.
@@ -226,21 +236,13 @@ Base URL: `http://localhost:8000`. All bodies are JSON. Full schema: http://loca
 
 The current version is sized for one squad's board. Two directions would change it:
 
-**As an internal tool for many squads**
-
-- Single sign-on, a board per squad, and roles (who can edit, who can only view)
-- Each task owned by a squad and user, with every query filtered by that ownership
-- An audit log of who changed what
-- Optimistic locking: the client sends the `updated_at` it saw, and the server answers 409 Conflict if someone saved in between
-
-**At consumer scale**
-
-- Keyset pagination on `(created_at, id)` instead of returning every task, since large `OFFSET`s get slower
-- An index on `(status, created_at DESC)`, added after checking the query plan with `EXPLAIN ANALYZE`
-- Alembic migrations, so the schema can change without dropping data
-- Connection pool tuning, and a read replica for list queries
-- Caching for read-heavy lists, and rate limiting per client
-- Observability: structured logs, metrics and tracing
+| As an internal tool for many squads | At consumer scale |
+|---|---|
+| Single sign-on, a board per squad, and roles (who can edit, who can only view) | Keyset pagination on `(created_at, id)` instead of returning every task, since large `OFFSET`s get slower |
+| Each task owned by a squad and user, with every query filtered by that ownership | An index on `(status, created_at DESC)`, added after checking the query plan with `EXPLAIN ANALYZE` |
+| An audit log of who changed what | Alembic migrations, so the schema can change without dropping data |
+| Optimistic locking: the client sends the `updated_at` it saw, and the server answers 409 Conflict if someone saved in between | Connection pool tuning, a read replica for list queries, caching and rate limiting per client |
+| | Observability: structured logs, metrics and tracing |
 
 ## Known limitations
 
@@ -255,8 +257,6 @@ The current version is sized for one squad's board. Two directions would change 
 
 ## Next steps
 
-In order of priority:
-
 1. **Authentication and ownership**: the biggest gap as soon as more than one squad uses it.
 2. **Alembic**: `create_all` cannot change an existing table, so the first schema change needs versioned migrations.
 3. **Keyset pagination plus an index on `(status, created_at DESC)`**: so the list stays fast with thousands of tasks.
@@ -264,6 +264,9 @@ In order of priority:
 5. **Frontend tests (Vitest + Testing Library)**: so the UI states checked by hand are checked on every change.
 
 ## Troubleshooting
+
+<details>
+<summary>Show common problems and fixes</summary>
 
 - **`env file .../backend/.env not found`**: the env file was not copied yet. Run the copy command from step 1.
 - **Port 5433 is already in use**: change the left side of `"5433:5432"` in `docker-compose.yml` (for example `"5434:5432"`) and set the same number as `DB_PORT` in `backend/.env`.
@@ -282,6 +285,8 @@ In order of priority:
   ```
 
 - **Safari: Tab skips the buttons**: by default Safari only tabs between form fields. Use Option+Tab, or turn on "Press Tab to highlight each item on a webpage" in Safari Settings → Advanced.
+
+</details>
 
 ## Development notes
 I used an AI coding assistant for research (library versions, framework behavior) and scaffolding.
