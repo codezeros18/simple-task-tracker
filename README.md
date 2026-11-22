@@ -40,6 +40,31 @@ docker compose exec db psql -U tasks_user -d tasks -c '\l'
 
 The list should contain `tasks` and `tasks_test`.
 
+### 2. Start the API
+
+macOS / Linux:
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+Windows (PowerShell):
+
+```powershell
+cd backend
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+The API runs on http://localhost:8000 and the interactive docs are at http://localhost:8000/docs.
+The `tasks` table is created automatically on startup, so the database must be running first.
+
 ## Setup without Docker
 
 You need a local PostgreSQL server on port 5432. Create the user and both databases as a superuser
@@ -53,6 +78,22 @@ createdb -O tasks_user tasks_test
 
 Then copy the env file as in step 1 and set `DB_PORT=5432` in `backend/.env`.
 The password must match `POSTGRES_PASSWORD` in that file. The remaining steps are the same.
+
+## API reference
+
+Base URL: `http://localhost:8000`. All bodies are JSON. Full schema: http://localhost:8000/docs.
+
+| Method | Path | Body | Success | Errors |
+|---|---|---|---|---|
+| `GET` | `/tasks` | none; optional query `status` (`Todo`, `In Progress` or `Done`) | `200` list, newest first | `422`, `503` |
+| `POST` | `/tasks` | `title` (required, 1–120 chars after trimming spaces), `description` (optional, up to 2000 chars), `status` (optional, default `Todo`) | `201` created task | `422`, `503` |
+| `PUT` | `/tasks/{task_id}` | any of `title`, `description`, `status`; fields that are sent cannot be `null` | `200` updated task | `404`, `422`, `503` |
+| `DELETE` | `/tasks/{task_id}` | none | `204` empty body | `404`, `422`, `503` |
+
+- `404`: `{"detail": "Task not found"}`
+- `422`: FastAPI's standard validation error, `{"detail": [...]}` with the failing field in `loc`
+- `503`: `{"detail": "Database unavailable"}` when PostgreSQL cannot be reached
+- Status values are case-sensitive. Unknown fields are rejected with `422`.
 
 ## Troubleshooting
 
