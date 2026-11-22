@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* Design tokens (each one becomes utilities like bg-page, text-ink, border-line) */
+@theme {
+  --color-page: #fafaf9;
+  --color-surface: #ffffff;
+  --color-ink: #1c1917;
+  --color-muted: #57534e;
+  --color-line: #e7e5e4;
+  --color-field: #78716c;
+  --color-accent: #4338ca;
+  --color-danger: #b91c1c;
+
+  --color-todo-ink: #334155;
+  --color-todo-bg: #f1f5f9;
+  --color-progress-ink: #92400e;
+  --color-progress-bg: #fef3c7;
+  --color-done-ink: #065f46;
+  --color-done-bg: #d1fae5;
+}
