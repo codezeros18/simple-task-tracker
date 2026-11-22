@@ -38,6 +38,13 @@ async function request(path, { method = 'GET', body } = {}) {
   return response.json()
 }
 
+// User-facing text for a failed request (copy from BLUEPRINT T7.3 / T8.5)
+export function describeError(error) {
+  if (error.status === 503) return 'Database unavailable. Try again in a moment.'
+  if (error.status === 404) return 'This task no longer exists'
+  return error.message
+}
+
 export const listTasks = () => request('/tasks')
 export const createTask = (payload) => request('/tasks', { method: 'POST', body: payload })
 export const updateTask = (id, patch) => request(`/tasks/${id}`, { method: 'PUT', body: patch })

@@ -6,6 +6,9 @@ export const DESC_MAX = 2000
 // How long a success notice stays on screen
 export const NOTICE_MS = 3000
 
+// Most notices on screen at once; the oldest is dropped first
+export const NOTICE_MAX = 4
+
 // The title counter appears once the title gets close to TITLE_MAX
 export const TITLE_COUNTER_FROM = 100
 

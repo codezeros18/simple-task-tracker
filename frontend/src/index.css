@@ -2,13 +2,15 @@
 
 /* Design tokens (each one becomes utilities like bg-page, text-ink, border-line) */
 @theme {
-  --color-page: #fafaf9;
+  --color-page: #e9eef7;
   --color-surface: #ffffff;
+  --color-column: #f6f8fb;
   --color-ink: #1c1917;
   --color-muted: #57534e;
-  --color-line: #e7e5e4;
+  --color-line: #e2e8f0;
   --color-field: #78716c;
-  --color-accent: #4338ca;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
   --color-danger: #b91c1c;
 
   --color-todo-ink: #334155;
@@ -17,10 +19,30 @@
   --color-progress-bg: #fef3c7;
   --color-done-ink: #065f46;
   --color-done-bg: #d1fae5;
+
+  /* Column dots: decorative only, the column title always names the status */
+  --color-todo-dot: #64748b;
+  --color-progress-dot: #d97706;
+  --color-done-dot: #059669;
 }
 
-/* One visible focus style for every control (keyboard users must always see where they are) */
 @layer base {
+  /* Canvas colour on the page itself, so no white strip shows around the panel */
+  body {
+    background-color: var(--color-page);
+  }
+
+  /* Tailwind v4 no longer turns the cursor into a hand on buttons, so say it once here */
+  button:not(:disabled),
+  select:not(:disabled) {
+    cursor: pointer;
+  }
+  button:disabled,
+  select:disabled {
+    cursor: not-allowed;
+  }
+
+  /* One visible focus style for every control (keyboard users must always see where they are) */
   :where(button, input, select, textarea, [tabindex="-1"]):focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
@@ -29,6 +51,28 @@
 
 /* Native selects ignore height in Safari unless appearance is reset; the arrow is drawn with CSS borders */
 @layer components {
+  /* Status glyph drawn with CSS (so it is not one of the 3 SVG icons): empty ring = Todo,
+     half ring = In Progress, solid = Done. Shape, not only colour, tells the statuses apart.
+     The status names must match STATUSES in constants.js. */
+  .glyph {
+    flex: none;
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 2px solid var(--glyph);
+    border-radius: 9999px;
+  }
+  .glyph[data-status="Todo"] {
+    --glyph: var(--color-todo-dot);
+  }
+  .glyph[data-status="In Progress"] {
+    --glyph: var(--color-progress-dot);
+    background: conic-gradient(var(--glyph) 50%, transparent 0);
+  }
+  .glyph[data-status="Done"] {
+    --glyph: var(--color-done-dot);
+    background: var(--glyph);
+  }
+
   .select-wrap {
     position: relative;
   }
@@ -43,8 +87,9 @@
     right: 0.85rem;
     width: 0.45rem;
     height: 0.45rem;
-    border-right: 2px solid var(--color-muted);
-    border-bottom: 2px solid var(--color-muted);
+    /* Follows the text colour of the select it belongs to */
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
     transform: translateY(-70%) rotate(45deg);
     pointer-events: none;
   }
