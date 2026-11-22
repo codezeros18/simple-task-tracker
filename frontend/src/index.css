@@ -21,8 +21,31 @@
 
 /* One visible focus style for every control (keyboard users must always see where they are) */
 @layer base {
-  :where(button, input, select, textarea):focus-visible {
+  :where(button, input, select, textarea, [tabindex="-1"]):focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+  }
+}
+
+/* Native selects ignore height in Safari unless appearance is reset; the arrow is drawn with CSS borders */
+@layer components {
+  .select-wrap {
+    position: relative;
+  }
+  .select-wrap select {
+    appearance: none;
+    padding-right: 2rem;
+  }
+  .select-wrap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0.85rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-right: 2px solid var(--color-muted);
+    border-bottom: 2px solid var(--color-muted);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
   }
 }

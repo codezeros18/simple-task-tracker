@@ -5,3 +5,9 @@ export const DESC_MAX = 2000
 
 // How long a success notice stays on screen
 export const NOTICE_MS = 3000
+
+// The title counter appears once the title gets close to TITLE_MAX
+export const TITLE_COUNTER_FROM = 100
+
+// Placeholder cards per column while the first load is running
+export const SKELETON_CARDS = 2

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { DESC_MAX, STATUSES, TITLE_MAX } from '../constants.js'
+import { DESC_MAX, STATUSES, TITLE_COUNTER_FROM, TITLE_MAX } from '../constants.js'
 
 const FIELDS = ['title', 'description', 'status']
 
@@ -51,7 +51,11 @@ export default function TaskForm({ onCreate }) {
             id="title"
             ref={titleRef}
             value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            onChange={(event) => {
+              setTitle(event.target.value)
+              // The old message no longer applies once the user edits the title
+              setErrors((prev) => ({ ...prev, title: undefined }))
+            }}
             maxLength={TITLE_MAX}
             aria-invalid={errors.title ? true : undefined}
             aria-describedby={errors.title ? 'title-error' : undefined}
@@ -62,24 +66,31 @@ export default function TaskForm({ onCreate }) {
               {errors.title}
             </p>
           )}
+          {title.length > TITLE_COUNTER_FROM && (
+            <p className="mt-1 text-xs text-muted">
+              {title.length}/{TITLE_MAX}
+            </p>
+          )}
         </div>
 
         <div className="md:w-44">
           <label htmlFor="status" className="text-sm font-medium">
             Status
           </label>
-          <select
-            id="status"
-            value={status}
-            onChange={(event) => setStatus(event.target.value)}
-            aria-invalid={errors.status ? true : undefined}
-            aria-describedby={errors.status ? 'status-error' : undefined}
-            className={`${inputClass} mt-1 border-field`}
-          >
-            {STATUSES.map((value) => (
-              <option key={value}>{value}</option>
-            ))}
-          </select>
+          <div className="select-wrap mt-1">
+            <select
+              id="status"
+              value={status}
+              onChange={(event) => setStatus(event.target.value)}
+              aria-invalid={errors.status ? true : undefined}
+              aria-describedby={errors.status ? 'status-error' : undefined}
+              className={`${inputClass} border-field`}
+            >
+              {STATUSES.map((value) => (
+                <option key={value}>{value}</option>
+              ))}
+            </select>
+          </div>
           {errors.status && (
             <p id="status-error" className="mt-1 text-sm text-danger">
               {errors.status}
@@ -90,7 +101,7 @@ export default function TaskForm({ onCreate }) {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-accent px-4 text-sm font-medium text-white transition-colors disabled:opacity-60 md:mt-6"
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-accent px-4 text-sm font-medium text-white motion-safe:transition-colors disabled:opacity-60 md:mt-6"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="size-4">
             <path d="M10 4a1 1 0 0 1 1 1v4h4a1 1 0 1 1 0 2h-4v4a1 1 0 1 1-2 0v-4H5a1 1 0 1 1 0-2h4V5a1 1 0 0 1 1-1Z" />

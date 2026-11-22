@@ -13,7 +13,7 @@ export default function Notice({ type, text, onDismiss }) {
       <button
         type="button"
         onClick={onDismiss}
-        className="min-h-10 shrink-0 rounded-md px-2 text-muted transition-colors hover:text-ink"
+        className="min-h-10 shrink-0 rounded-md px-2 text-muted hover:text-ink motion-safe:transition-colors"
       >
         Dismiss
       </button>
