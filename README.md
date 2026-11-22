@@ -66,6 +66,30 @@ The API runs on http://localhost:8000 and the interactive docs are at http://loc
 The `tasks` table is created automatically on startup, so the database must be running first.
 `uvicorn` keeps running in this terminal; leave it open and use a new terminal for the next steps.
 
+### 3. Start the frontend
+
+In a new terminal, from the repository root.
+
+macOS / Linux:
+
+```bash
+cp frontend/.env.example frontend/.env
+cd frontend
+npm install
+npm run dev
+```
+
+Windows (PowerShell):
+
+```powershell
+Copy-Item frontend\.env.example frontend\.env
+cd frontend
+npm install
+npm run dev
+```
+
+Open http://localhost:5173. The app talks to the API at `VITE_API_URL` from `frontend/.env`.
+
 ## Setup without Docker
 
 You need a local PostgreSQL server on port 5432. Create the user and both databases as a superuser
