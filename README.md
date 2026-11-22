@@ -47,7 +47,7 @@ Run every command from the repository root unless a step says otherwise.
 ### 0. Get the code
 
 ```bash
-git clone <repo-url> simple-task-tracker
+git clone https://github.com/codezeros18/simple-task-tracker.git simple-task-tracker
 cd simple-task-tracker
 ```
 
