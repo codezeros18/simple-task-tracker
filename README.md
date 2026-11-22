@@ -64,6 +64,7 @@ uvicorn app.main:app --reload
 
 The API runs on http://localhost:8000 and the interactive docs are at http://localhost:8000/docs.
 The `tasks` table is created automatically on startup, so the database must be running first.
+`uvicorn` keeps running in this terminal; leave it open and use a new terminal for the next steps.
 
 ## Setup without Docker
 
@@ -84,9 +85,11 @@ The password must match `POSTGRES_PASSWORD` in that file. The remaining steps ar
 The tests run against the separate `tasks_test` database, so the database from step 1 must be running.
 They never touch the `tasks` database you use while developing.
 
-From `backend/` with the virtual environment active:
+In a new terminal, from the repository root (on Windows, activate with `.venv\Scripts\Activate.ps1` instead):
 
 ```bash
+cd backend
+source .venv/bin/activate
 pip install -r requirements-dev.txt
 pytest -v
 ```
