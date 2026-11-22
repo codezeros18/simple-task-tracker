@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest==9.2.0                 # test runner
+httpx2==2.16.2                # used by Starlette 1.x TestClient (old httpx is deprecated)
+ruff==0.17.6                  # linter + formatter
