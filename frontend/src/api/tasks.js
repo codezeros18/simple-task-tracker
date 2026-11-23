@@ -38,7 +38,7 @@ async function request(path, { method = 'GET', body } = {}) {
   return response.json()
 }
 
-// User-facing text for a failed request (copy from BLUEPRINT T7.3 / T8.5)
+// User-facing text for a failed request
 export function describeError(error) {
   if (error.status === 503) return 'Database unavailable. Try again in a moment.'
   if (error.status === 404) return 'This task no longer exists'

@@ -289,5 +289,6 @@ The current version is sized for one squad's board. Two directions would change 
 </details>
 
 ## Development notes
-I used an AI coding assistant for research (library versions, framework behavior) and scaffolding.
-All design decisions are mine, every line was reviewed, and I can walk through any part of the code.
+I built this with an AI coding assistant, which is why it appears as co-author on every commit.
+I set the requirements, made or approved every decision, directed each step and reviewed every change;
+I can walk through any part of the code.
